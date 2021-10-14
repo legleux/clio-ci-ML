@@ -1,0 +1,136 @@
+name: Build clio
+on:
+  repository_dispatch:
+    types: build
+  workflow_dispatch:
+
+jobs:
+  build_clio_clang-10:
+    name: Clang 10 build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: legleux/clio
+
+      - name: Build
+        id: build
+        run: |
+          export CC=$(which clang) CXX=$(which clang++)
+          docker run -v $PWD:/clio_src legleux/clio_builder bash -c "cd /clio_src && mkdir build && cd build && cmake .. && cmake --build ."
+          echo "::set-output name=result::Success"
+          echo "::set-output name=color::success"
+
+      - name: Create Clang 10 Badge
+        uses: schneegans/dynamic-badges-action@v1.1.0
+        with:
+          auth: ${{ secrets.GIST_TOKEN }}
+          gistID: 9f207f74ad0ba153cc4e2c6638ac9077
+          filename: clang10.json
+          label: Clang 10
+          message: ${{ steps.build.outputs.result }}
+          color: ${{ steps.build.outputs.color }}
+
+  build_clio_gcc-10:
+    name: GCC-10 build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: legleux/clio
+
+      - name: Build
+        id: build
+        run: |
+          ls -lh
+          docker run -v $PWD:/clio_src legleux/clio_builder bash -c "cd /clio_src && mkdir build && cd build && cmake .. && cmake --build ."
+          echo "::set-output name=result::Success"
+          echo "::set-output name=color::success"
+
+      - name: Upload clio_server
+        uses: actions/upload-artifact@v2
+        with:
+          name: clio_server
+          path: build/clio_server
+
+      - name: Upload clio_tests
+        uses: actions/upload-artifact@v2
+        with:
+          name: clio_tests
+          path: build/clio_tests
+
+      - name: Create GCC10 Badge
+        uses: schneegans/dynamic-badges-action@v1.1.0
+        with:
+          auth: ${{ secrets.GIST_TOKEN }}
+          gistID: df8548ad18743f994c21fdf7fa60b883
+          filename: GCC10.json
+          label: GCC-10
+          message: ${{ steps.build.outputs.result }}
+          color: ${{ steps.build.outputs.color }}
+
+  build_clio_gcc-9:
+    name: GCC-9 build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: legleux/clio
+
+      - name: Build
+        id: build
+        run: |
+          docker run -v $PWD:/clio_src legleux/clio_builder bash -c "update-alternatives --set g++ $(which g++-9) && update-alternatives --set gcc $(which gcc-9) && cd /clio_src && mkdir build && cd build && cmake .. && cmake --build ."
+          echo "::set-output name=result::Success"
+          echo "::set-output name=color::success"
+
+      - name: Create GCC9 Badge
+        uses: schneegans/dynamic-badges-action@v1.1.0
+        with:
+          auth: ${{ secrets.GIST_TOKEN }}
+          gistID: 22adf243d97573f45329b6941149c28b
+          filename: GCC9.json
+          label: GCC-9
+          message: ${{ steps.build.outputs.result }}
+          color: ${{ steps.build.outputs.color }}
+
+  test_clio:
+    name: Run clio_tests
+    runs-on: ubuntu-20.04
+    needs: build_clio_gcc-10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get clio_tests
+        uses: actions/download-artifact@v2
+        with:
+          name: clio_tests
+
+      - name: Run clio_tests
+        id: test
+        run: |
+          sudo apt-get update
+          DEBIAN_FRONTEND=noninteractive sudo apt-get install -y wget gnupg apt-transport-https openjdk-8-jdk postgresql
+          sudo sh -c 'echo "deb http://www.apache.org/dist/cassandra/debian 40x main" > /etc/apt/sources.list.d/cassandra.list'
+          wget -q -O - https://www.apache.org/dist/cassandra/KEYS | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get install -y cassandra
+          ls -lah
+          chmod +x clio_tests
+          ./clio_tests
+          echo "::set-output name=result::Success"
+          echo "::set-output name=color::success"
+
+      - name: Create test Badge
+        uses: schneegans/dynamic-badges-action@v1.1.0
+        with:
+          auth: ${{ secrets.GIST_TOKEN }}
+          gistID: d27fe9f1b7be3c30bb7cac521de486c1
+          filename: test.json
+          label: Tests
+          message: ${{ steps.test.outputs.result }}
+          color: ${{ steps.test.outputs.color }}
