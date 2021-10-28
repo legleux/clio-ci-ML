@@ -119,7 +119,27 @@ jobs:
           export CPPFLAGS="-I/usr/local/opt/llvm@12/include"
 
       - name: Conan install boost
-        run: ls -lh && mkdir clio/build && cd clio/build && conan install --profile ../../mac_conan_profile ../.. && cmake -DCONAN=ON .. && cmake --build .
+        run: ls -lh && mkdir clio/build && cd clio/build && conan install --profile ../../mac_conan_profile ../..
+
+      - name: Configure
+        run: cd clio/build && cmake -DCONAN=ON ..
+
+      - name: Build
+        id: build
+        run: |
+          cd clio/build && cmake --build .
+          echo "::set-output name=result::Success"
+          echo "::set-output name=color::success"
+
+      - name: Create macOS Badge
+        uses: schneegans/dynamic-badges-action@v1.1.0
+        with:
+          auth: ${{ secrets.GIST_TOKEN }}
+          gistID: dbdceeacf9ecbc85957f69ea95343b71
+          filename: macOS-clang-12.json
+          label: macOS-clang-12
+          message: ${{ steps.build.outputs.result }}
+          color: ${{ steps.build.outputs.color }}
 
   test_clio:
     name: Run clio_tests

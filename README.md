@@ -7,5 +7,6 @@
 
 ![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/legleux/9f207f74ad0ba153cc4e2c6638ac9077/raw/clang10.json)
 
+![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/legleux/dbdceeacf9ecbc85957f69ea95343b71/raw/macOS-clang-12.json)
 
 ![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/legleux/d27fe9f1b7be3c30bb7cac521de486c1/raw/test.json)
