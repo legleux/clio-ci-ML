@@ -120,10 +120,14 @@ jobs:
           export PATH=$PATH:/usr/local/opt/llvm@12/bin
           export LDFLAGS="-L/usr/local/opt/llvm@12/lib"
           export CPPFLAGS="-I/usr/local/opt/llvm@12/include"
-          ls -lh && mkdir clio/build && cd clio/build && conan install --profile ../../mac_conan_profile ../..
+          ls -lh && mkdir clio/build && cd clio/build && conan install --profile ../../mac_conan_profile -s compiler.version=12 ../..
 
       - name: Configure
-        run: cd clio/build && cmake -DCONAN=ON ..
+        run: |
+          export PATH=$PATH:/usr/local/opt/llvm@12/bin
+          export LDFLAGS="-L/usr/local/opt/llvm@12/lib"
+          export CPPFLAGS="-I/usr/local/opt/llvm@12/include"
+          cd clio/build && cmake -DCONAN=ON -DCMAKE_C_COMPILER=$(which clang) -DCMAKE_CXX_COMPILER=$(which clang++)..
 
       - name: Build
         id: build
