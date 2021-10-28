@@ -114,12 +114,13 @@ jobs:
       - name: Install Deps
         run: |
           brew install git cmake conan pkg-config protobuf openssl ninja llvm@12
+
+      - name: Conan install boost
+        run: |
           export PATH=$PATH:/usr/local/opt/llvm@12/bin
           export LDFLAGS="-L/usr/local/opt/llvm@12/lib"
           export CPPFLAGS="-I/usr/local/opt/llvm@12/include"
-
-      - name: Conan install boost
-        run: ls -lh && mkdir clio/build && cd clio/build && conan install --profile ../../mac_conan_profile ../..
+          ls -lh && mkdir clio/build && cd clio/build && conan install --profile ../../mac_conan_profile ../..
 
       - name: Configure
         run: cd clio/build && cmake -DCONAN=ON ..
