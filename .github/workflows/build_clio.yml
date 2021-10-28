@@ -101,7 +101,10 @@ jobs:
     name: macOS build
     runs-on: macos-11
     steps:
-      - name: Checkout
+      - name: Checkout clio-ci
+        uses: actions/checkout@v2
+
+      - name: Checkout clio
         uses: actions/checkout@v2
         with:
           repository: legleux/clio
