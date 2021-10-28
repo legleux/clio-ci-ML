@@ -97,6 +97,22 @@ jobs:
           message: ${{ steps.build.outputs.result }}
           color: ${{ steps.build.outputs.color }}
 
+  build_clio-macos:
+    name: macOS build
+    runs-on: macos-11
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: legleux/clio
+          branch: conan
+
+      - name: Install Deps
+        run: brew install git cmake conan pkg-config protobuf openssl ninja
+
+      - name: Conan install boost
+        run: mkdir build && cd build && conan install .. && cmake .. && cmake --build .
+
   test_clio:
     name: Run clio_tests
     runs-on: ubuntu-20.04
