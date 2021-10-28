@@ -115,7 +115,7 @@ jobs:
         run: brew install git cmake conan pkg-config protobuf openssl ninja
 
       - name: Conan install boost
-        run: ls -lh && mkdir clio/build && cd clio/build && cp ../../mac_conan_profile /Users/runner/.conan/profiles/default && conan install ../.. && cmake -DCONAN=ON .. && cmake --build .
+        run: ls -lh && mkdir clio/build && cd clio/build && conan install --profile ../../mac_conan_profile ../.. && cmake -DCONAN=ON .. && cmake --build .
 
   test_clio:
     name: Run clio_tests
