@@ -106,12 +106,13 @@ jobs:
         with:
           repository: legleux/clio
           ref: conan
+          path: clio
 
       - name: Install Deps
         run: brew install git cmake conan pkg-config protobuf openssl ninja
 
       - name: Conan install boost
-        run: mkdir build && cd build && conan install .. && cmake .. && cmake --build .
+        run: ls -lh && mkdir clio/build && cd clio/build && conan install ../.. && cmake .. && cmake --build .
 
   test_clio:
     name: Run clio_tests
