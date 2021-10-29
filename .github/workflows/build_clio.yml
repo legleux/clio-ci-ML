@@ -117,19 +117,11 @@ jobs:
 
       - name: Conan install boost
         run: |
-          export PATH=$PATH:/usr/local/opt/llvm@12/bin
-          export LDFLAGS="-L/usr/local/opt/llvm@12/lib"
-          export CPPFLAGS="-I/usr/local/opt/llvm@12/include"
-          ls -lh && mkdir clio/build && cd clio/build && conan install --profile ../../mac_conan_profile -s compiler.version=12.0 ../..
+          ls -lh && mkdir clio/build && cd clio/build && PATH="/usr/local/opt/llvm@12/bin":$PATH  conan install ../..
 
       - name: Configure
         run: |
-          export PATH=$PATH:/usr/local/opt/llvm@12/bin
-          export LDFLAGS="-L/usr/local/opt/llvm@12/lib"
-          export CPPFLAGS="-I/usr/local/opt/llvm@12/include"
-          ls -l
-          echo "PATH= $PATH"
-          cd clio/build && cmake -DCONAN=ON -DCMAKE_C_COMPILER=$(which clang) -DCMAKE_CXX_COMPILER=$(which clang++) ..
+          cd clio/build && CC=clang CXX=clang++ cmake -DCONAN=ON -DCMAKE_C_COMPILER=$(which clang) -DCMAKE_CXX_COMPILER=$(which clang++) ..
 
       - name: Build
         id: build
