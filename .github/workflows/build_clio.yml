@@ -117,7 +117,7 @@ jobs:
 
       - name: Conan install boost
         run: |
-          ls -lh && mkdir clio/build && cd clio/build && PATH="/usr/local/opt/llvm@12/bin":$PATH  conan install ../..
+          ls -lh && mkdir clio/build && cd clio/build && PATH="/usr/local/opt/llvm@12/bin":$PATH  conan install ..
 
       - name: Configure
         run: |
