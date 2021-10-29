@@ -127,7 +127,9 @@ jobs:
           export PATH=$PATH:/usr/local/opt/llvm@12/bin
           export LDFLAGS="-L/usr/local/opt/llvm@12/lib"
           export CPPFLAGS="-I/usr/local/opt/llvm@12/include"
-          cd clio/build && cmake -DCONAN=ON -DCMAKE_C_COMPILER=$(which clang) -DCMAKE_CXX_COMPILER=$(which clang++)..
+          ls -l
+          echo "PATH= $PATH"
+          cd clio/build && cmake -DCONAN=ON -DCMAKE_C_COMPILER=$(which clang) -DCMAKE_CXX_COMPILER=$(which clang++) ..
 
       - name: Build
         id: build
