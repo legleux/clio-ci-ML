@@ -113,11 +113,13 @@ jobs:
 
       - name: Install Deps
         run: |
-          brew install git cmake conan pkg-config protobuf openssl ninja llvm@12
+          brew install git cmake conan pkg-config protobuf openssl ninja
 
       - name: Conan install boost
         run: |
-          ls -lh clio && mkdir clio/build && cd clio/build && PATH="/usr/local/opt/llvm@12/bin":$PATH  conan install -s compiler=apple-clang ..
+          conan remote add art-jfrog https://legleux.jfrog.io/artifactory/api/conan/ripple-conan verify_ssl --insert
+          conan user -p ${{ CONAN_ART_PW }} -r art-jfrog legleux@gmail.com
+          ls -lh clio && mkdir clio/build && cd clio/build && conan install ..
 
       - name: Configure
         run: |
