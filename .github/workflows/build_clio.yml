@@ -114,6 +114,7 @@ jobs:
       - name: Install Deps
         run: |
           brew install git cmake conan pkg-config protobuf openssl ninja
+          brew link openssl --force
 
       - name: Conan install boost
         run: |
