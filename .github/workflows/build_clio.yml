@@ -117,7 +117,7 @@ jobs:
 
       - name: Conan install boost
         run: |
-          conan remote add art-jfrog https://legleux.jfrog.io/artifactory/api/conan/ripple-conan verify_ssl --insert
+          conan remote add art-jfrog https://legleux.jfrog.io/artifactory/api/conan/ripple-conan --insert
           conan user -p ${{ secrets.CONAN_ART_PW }} -r art-jfrog legleux@gmail.com
           ls -lh clio && mkdir clio/build && cd clio/build && conan install ..
 
