@@ -38,14 +38,13 @@ jobs:
           if [[ $OS =~ "ubuntu" ]]; then
             source /etc/os-release
             if [[ "${VERSION_CODENAME}" = "bionic" ]]; then
-              echo "WE DEFINITELY GOT HERE"
               pip3 install -U pip setuptools
               pip3 install conan
             else
               pip install conan
             fi
-            CC=$(which gcc-9)
-            CXX=$(which g++-9)
+            export CC=$(which gcc-9)
+            export CXX=$(which g++-9)
             conan profile new default --detect
             conan profile update settings.compiler.libcxx=libstdc++11 default
             conan profile update settings.compiler.cppstd=17 default
