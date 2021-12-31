@@ -28,15 +28,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          repository: legleux/clio
+          ref: conan-boost
 
       - name: Build
         run: |
           OS=${{ matrix.runner }}
-          if [[ "${OS,,}" =~ ubuntu ]]; then
+          if [[ $OS =~ "ubuntu" ]]; then
             pip install conan;
+            CC=$(which gcc-9)
+            CXX=$(which g++-9)
           else
             brew install conan;
           fi
-          conan install . -if build
-          cmake -B build
-          cmake --build build --parallel $(nproc)
+          conan install clio/build -if build
+          cmake -B clio/build
+          cmake --build clio/build --parallel $(nproc)
