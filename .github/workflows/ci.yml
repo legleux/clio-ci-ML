@@ -50,6 +50,6 @@ jobs:
           conan config set general.revisions_enabled=1
           conan remote add --insert 0 legleux https://legleux.jfrog.io/artifactory/api/conan/ripple-conan
           ls -lah
-          conan install . -if build
+          conan install . -if build --build=missing
           cmake -B build
           cmake --build build --parallel $(nproc)
