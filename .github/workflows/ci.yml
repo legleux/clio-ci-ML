@@ -39,6 +39,7 @@ jobs:
             pip install conan;
             CC=$(which gcc-9)
             CXX=$(which g++-9)
+            conan config set compiler.libcxx=libstdc++11
           else
             brew install conan;
           fi
