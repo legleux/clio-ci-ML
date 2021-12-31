@@ -38,6 +38,8 @@ jobs:
           if [[ $OS =~ "ubuntu" ]]; then
             source /etc/os-release
             if [[ "${VERSION_CODENAME}" = "bionic" ]]; then
+              echo "WE DEFINITELY GOT HERE"
+              pip3 install -U pip setuptools
               pip3 install conan
             else
               pip install conan
