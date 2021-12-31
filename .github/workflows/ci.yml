@@ -36,7 +36,12 @@ jobs:
         run: |
           OS=${{ matrix.runner }}
           if [[ $OS =~ "ubuntu" ]]; then
-            pip install conan;
+            source /etc/os-release
+            if [[ "${VERSION_CODENAME}" = "bionic"]]; then
+              pip3 install conan
+            else
+              pip install conan
+            fi
             CC=$(which gcc-9)
             CXX=$(which g++-9)
             conan profile new default --detect
