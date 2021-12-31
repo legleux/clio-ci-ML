@@ -33,7 +33,8 @@ jobs:
 
       - name: Build
         run: |
-          if [[ "${{ matrix.runner },,}" =~ ubuntu ]]; then
+          OS=${{ matrix.runner }}
+          if [[ "${OS,,}" =~ ubuntu ]]; then
             pip install conan;
           else
             brew install conan";
