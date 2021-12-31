@@ -25,12 +25,12 @@ jobs:
             cxx_std: 11
             name: macOS 11
 
-steps:
-  - name: Checkout
-    uses: actions/checkout@v2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-  - name: Build
-    run: |
-      conan install . -if build
-      cmake -B build
-      cmake --build build --parallel $(nproc)
+      - name: Build
+        run: |
+          conan install . -if build
+          cmake -B build
+          cmake --build build --parallel $(nproc)
