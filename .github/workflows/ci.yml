@@ -41,6 +41,8 @@ jobs:
             CXX=$(which g++-9)
             conan profile new default --detect
             conan profile update settings.compiler.libcxx=libstdc++11 default
+            conan profile update settings.compiler.cppstd=17 default
+
           else
             brew install conan;
             conan profile new default --detect
