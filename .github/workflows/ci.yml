@@ -1,0 +1,36 @@
+name: Build clio
+on:
+  repository_dispatch:
+    types: build
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.runner || 'ubuntu-20.04' }}
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-10.15
+            name: macOS 10.15
+
+          - runner: ubuntu-18.04
+            name: Ubuntu 18.04
+
+          - runner: ubuntu-20.04
+            name: Ubuntu 20.04
+
+          - runner: macos-11
+            cxx_std: 11
+            name: macOS 11
+
+steps:
+  - name: Checkout
+    uses: actions/checkout@v2
+
+  - name: Build
+    run: |
+      conan install . -if build
+      cmake -B build
+      cmake --build build --parallel $(nproc)

@@ -19,18 +19,6 @@ jobs:
         run: |
           export CC=$(which clang) CXX=$(which clang++)
           docker run -v $PWD:/clio_src legleux/clio_builder bash -c "cd /clio_src && mkdir build && cd build && cmake .. && cmake --build ."
-          echo "::set-output name=result::Success"
-          echo "::set-output name=color::success"
-
-      - name: Create Clang 10 Badge
-        uses: schneegans/dynamic-badges-action@v1.1.0
-        with:
-          auth: ${{ secrets.GIST_TOKEN }}
-          gistID: 9f207f74ad0ba153cc4e2c6638ac9077
-          filename: clang10.json
-          label: Clang 10
-          message: ${{ steps.build.outputs.result }}
-          color: ${{ steps.build.outputs.color }}
 
   build_clio_gcc-10:
     name: GCC-10 build
@@ -143,6 +131,8 @@ jobs:
           label: macOS-clang-12
           message: ${{ steps.build.outputs.result }}
           color: ${{ steps.build.outputs.color }}
+
+# package_clio
 
   test_clio:
     name: Run clio_tests
