@@ -39,7 +39,9 @@ jobs:
             pip install conan;
             CC=$(which gcc-9)
             CXX=$(which g++-9)
-            conan config set compiler.libcxx=libstdc++11
+            echo "UPDATING CONAN PROFILE"
+            conan profile update settings.compiler.libcxx=libstdc++11 default
+            conan profile show default
           else
             brew install conan;
           fi
