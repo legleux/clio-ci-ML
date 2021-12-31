@@ -42,7 +42,7 @@ jobs:
           else
             brew install conan;
           fi
-          conan remote add --insert 0 legleux https://legleux.jfrog.io/artifactory/api/conan/ripple-conan
+          CONAN_REVISIONS_ENABLED=1 conan remote add --insert 0 legleux https://legleux.jfrog.io/artifactory/api/conan/ripple-conan
           ls -lah
           conan install . -if build
           cmake -B build
