@@ -42,6 +42,7 @@ jobs:
           else
             brew install conan;
           fi
+          ls -lah
           conan install clio -if clio/build
           cmake -B clio/build
           cmake --build clio/build --parallel $(nproc)
