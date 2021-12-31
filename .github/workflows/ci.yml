@@ -37,7 +37,7 @@ jobs:
           if [[ "${OS,,}" =~ ubuntu ]]; then
             pip install conan;
           else
-            brew install conan";
+            brew install conan;
           fi
           conan install . -if build
           cmake -B build
