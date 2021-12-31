@@ -37,7 +37,7 @@ jobs:
           OS=${{ matrix.runner }}
           if [[ $OS =~ "ubuntu" ]]; then
             source /etc/os-release
-            if [[ "${VERSION_CODENAME}" = "bionic"]]; then
+            if [[ "${VERSION_CODENAME}" = "bionic" ]]; then
               pip3 install conan
             else
               pip install conan
