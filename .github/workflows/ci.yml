@@ -3,6 +3,8 @@ on:
   repository_dispatch:
     types: build
   workflow_dispatch:
+  push:
+    branches: [ $default-branch ]
 
 jobs:
   build:
