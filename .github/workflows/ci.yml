@@ -56,8 +56,5 @@ jobs:
           conan config set general.revisions_enabled=1
           conan remote add --insert 0 legleux https://legleux.jfrog.io/artifactory/api/conan/ripple-conan
           conan install . -if build --build=missing
-          conan user -p ${{ secrets.LEGLEUX_ART_PW }} -r legleux legleux@gmail.com
-
-      - name: Test script
-        run: |
-          ./build_deps.sh
+          cmake -B build
+          cmake --build build --parallel $(nproc)
