@@ -32,9 +32,12 @@ jobs:
           repository: legleux/clio
           ref: conan-boost
 
-      - name: Build
+      - name: Test script
         run: |
           ./build_deps.sh
+
+      - name: Build
+        run: |
           OS=${{ matrix.runner }}
           if [[ $OS =~ "ubuntu" ]]; then
             source /etc/os-release
