@@ -32,10 +32,6 @@ jobs:
           repository: legleux/clio
           ref: conan-boost
 
-      - name: Test script
-        run: |
-          ./build_deps.sh
-
       - name: Build
         run: |
           OS=${{ matrix.runner }}
@@ -59,10 +55,11 @@ jobs:
           fi
           conan config set general.revisions_enabled=1
           conan remote add --insert 0 legleux https://legleux.jfrog.io/artifactory/api/conan/ripple-conan
-          ls -lah
           conan install . -if build --build=missing
-          cmake -B build
-          cmake --build build --parallel $(nproc)
-          conan copy bzip2/1.0.8@ legleux/testing
+          # cmake -B build
+          # cmake --build build --parallel $(nproc)
+
+      - name: Test script
+        run: |
           conan user -p ${{ secrets.LEGLEUX_ART_PW }} -r legleux legleux@gmail.com
-          conan upload bzip2/1.0.8@legleux/testing -r legelux
+          ./build_deps.sh
