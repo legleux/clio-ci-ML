@@ -4,6 +4,7 @@ on:
     types: build
   workflow_dispatch:
   push:
+
 jobs:
   build:
     runs-on: ${{ matrix.runner || 'ubuntu-20.04' }}
