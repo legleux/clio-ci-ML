@@ -26,7 +26,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: thenumber
-          key: ${{ runner.os }}-number
+          key: cached-number
 
       - name: Generate Prime Numbers
         if: steps.cached-number.outputs.cache-hit != 'true'
