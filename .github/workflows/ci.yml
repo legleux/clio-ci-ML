@@ -87,6 +87,7 @@ jobs:
 
   test:
     runs-on: 'ubuntu-20.04'
+    needs: build
     steps:
       - name: Save Package
         uses: actions/download-artifact@master
@@ -95,3 +96,10 @@ jobs:
           path: ./
       - name: Test Clio
         run: file clio_tests
+
+  upload:
+    runs-on: 'ubuntu-20.04'
+    needs: test
+    steps:
+      - name: Push to Artifactory
+        run: echo "am pushing"
