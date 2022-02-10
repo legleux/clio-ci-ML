@@ -21,23 +21,11 @@ jobs:
             name: macOS 11
 
     steps:
-      - name: makefile
-        run: echo crap >> file
-
-      - name: read file
-        run: cat file
-
       - name: Checkout
         uses: actions/checkout@v2
         with:
           repository: legleux/clio
           ref: pkging
-
-      - name: Get boost source
-        uses: actions/upload-artifact@master
-        with:
-          name: boost
-          path: boost_1_75_0
 
       - name: Build boost
         run: |
@@ -45,18 +33,11 @@ jobs:
           unzip -q boost_1_75_0.zip
           cd boost_1_75_0
           ./bootstrap.sh && ./b2 cxxflags="-std=c++14"
-          echo "BOOST_ROOT=$PWD" >> $GITHUB_ENV
-
-      - name: Get boost
-        uses: actions/download-artifact@master
-        with:
-          name: boost
-          path: boost_1_75_0
 
       - name: Build
         run: |
           OS=${{ matrix.runner }}
-          export BOOST_ROOT=${{ env.BOOST_ROOT }}
+          export BOOST_ROOT=boost_1_75_0
           echo "BOOST_ROOT: $BOOST_ROOT"
           if [[ $OS =~ "ubuntu" ]]; then
             protobuf-compiler libprotobuf-dev bison flex autoconf
@@ -67,3 +48,12 @@ jobs:
             export OPENSSL_ROOT=$(brew --prefix openssl@1.1)
           fi
           cmake -B build && cmake --build build --parallel $(nproc)
+
+      - name: CPack
+        run: cd ./build && cpack -G DEB
+
+      - name: Save Package
+        uses: actions/upload-artifact@master
+        with:
+          name: packag
+          path: ./build/_packages/*.deb
