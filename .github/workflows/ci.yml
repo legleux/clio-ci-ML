@@ -45,7 +45,8 @@ jobs:
       - name: Build
         run: |
           OS=${{ matrix.runner }}
-          export BOOST_ROOT=boost_1_75_0
+          ls -lah
+          export BOOST_ROOT=$PWD/boost_1_75_0
           echo "BOOST_ROOT: $BOOST_ROOT"
           if [[ $OS =~ "ubuntu" ]]; then
             apt update && apt install -y protobuf-compiler libprotobuf-dev bison flex autoconf
