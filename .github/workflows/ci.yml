@@ -21,6 +21,23 @@ jobs:
             name: macOS 11
 
     steps:
+      - name: Cache number
+        id: cached-number
+        uses: actions/cache@v2
+        with:
+          path: thenumber
+          key: ${{ runner.os }}-number
+
+      - name: Generate Prime Numbers
+        if: steps.cached-number.outputs.cache-hit != 'true'
+        run: |
+          echo "I have run!"
+          echo 42 > thenumber
+
+      - name: Use Prime Numbers
+        run: cat thenumber
+
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -33,6 +50,14 @@ jobs:
           unzip -q boost_1_75_0.zip
           cd boost_1_75_0
           ./bootstrap.sh && ./b2 cxxflags="-std=c++14"
+        if: steps.cache-packages.outputs.cache-hit != 'true'
+
+      - name: Cache Boost
+        uses: actions/cache@v1
+        id: boost-cache
+        with:
+          path: boost_1_75_0
+          key: ${{ runner.OS }}-boost
 
       - name: Build
         run: |
