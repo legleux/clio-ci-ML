@@ -29,7 +29,7 @@ jobs:
           key: ${{ runner.OS }}-cache
 
       - name: Generate Prime Numbers
-        if: steps.${{ runner.OS }}-cache.outputs.cache-hit != 'true'
+        if: steps.new-cache.outputs.cache-hit != 'true'
         run: |
           echo "I am an expensive operation!"
           for i in $(seq 1 10); do echo $i;sleep 1; done
