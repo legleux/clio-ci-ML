@@ -21,18 +21,19 @@ jobs:
             name: macOS 11
 
     steps:
-      - name: Generate Prime Numbers
-        if: steps.cached-number.outputs.cache-hit != 'true'
-        run: |
-          echo "I have run!"
-          echo 42 > thenumber
-
       - name: Cache number
-        id: cached-number
+        id: new-cache
         uses: actions/cache@v2
         with:
           path: thenumber
-          key: cached-number
+          key: new-cache
+
+      - name: Generate Prime Numbers
+        if: steps.new-cache.outputs.cache-hit != 'true'
+        run: |
+          echo "I am an expensive operation!"
+          for i in $(seq 1 10); do echo $i;sleep 1; done
+          echo 42 > thenumber
 
       - name: Use Prime Numbers
         run: cat thenumber
