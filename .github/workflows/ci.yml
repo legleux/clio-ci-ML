@@ -26,6 +26,7 @@ jobs:
         with:
           repository: legleux/clio
           ref: pkging
+          path: clio
 
       - name: Cache Boost
         uses: actions/cache@v1
@@ -43,13 +44,14 @@ jobs:
           ./bootstrap.sh && ./b2 cxxflags="-std=c++14"
 
       - name: Build
+        working-directory: clio
         run: |
           OS=${{ matrix.runner }}
           ls -lah
-          export BOOST_ROOT=$PWD/boost_1_75_0
+          export BOOST_ROOT=$GITHUB_WORKSPACE/boost_1_75_0
           echo "BOOST_ROOT: $BOOST_ROOT"
           if [[ $OS =~ "ubuntu" ]]; then
-            apt update && apt install -y protobuf-compiler libprotobuf-dev bison flex autoconf
+            DEBIAN_FRONTEND=noninteractive apt-get install -y protobuf-compiler libprotobuf-dev bison flex autoconf
             export CC=$(which gcc-9)
             export CXX=$(which g++-9)
           else
@@ -59,10 +61,11 @@ jobs:
           cmake -B build && cmake --build build --parallel $(nproc)
 
       - name: CPack
-        run: cd ./build && cpack -G DEB
+        working-directory: clio/build
+        run: cpack -G DEB
 
       - name: Save Package
         uses: actions/upload-artifact@master
         with:
-          name: packag
-          path: ./build/_packages/*.deb
+          name: package
+          path: ./clio/build/_packages/*.deb
