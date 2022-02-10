@@ -13,17 +13,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - runner: macos-10.15
-            name: macOS 10.15
-
-          - runner: ubuntu-18.04
-            name: Ubuntu 18.04
 
           - runner: ubuntu-20.04
             name: Ubuntu 20.04
 
           - runner: macos-11
-            cxx_std: 11
             name: macOS 11
 
     steps:
@@ -31,31 +25,36 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: legleux/clio
-          ref: conan-boost
+          ref: pkging
+
+      - name: Build boost
+        uses: actions/upload-artifact@master
+        with:
+          name: boost
+          path: boost_1_75_0
+        run: |
+          wget https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.zip
+          unzip boost_1_75_0.zip
+
+          cd boost_1_75_0 && ./bootstrap && ./b2 cxxflags="-std=c++14"
+          echo "::set-env name=BOOST_ROOT::$PWD"
+
 
       - name: Build
+        uses: actions/download-artifact@master
+        with:
+          name: boost
+          path: boost_1_75_0
         run: |
           OS=${{ matrix.runner }}
+          echo "BOOST_ROOT: $BOOST_ROOT"
+          export BOOST_ROOT=$BOOST_ROOT
           if [[ $OS =~ "ubuntu" ]]; then
-            source /etc/os-release
-            if [[ "${VERSION_CODENAME}" = "bionic" ]]; then
-              pip3 install -U pip setuptools
-              pip3 install conan
-            else
-              pip install conan
-            fi
+            protobuf-compiler libprotobuf-dev bison flex autoconf
             export CC=$(which gcc-9)
             export CXX=$(which g++-9)
-            conan profile new default --detect
-            conan profile update settings.compiler.libcxx=libstdc++11 default
-            conan profile update settings.compiler.cppstd=17 default
-
           else
-            brew install conan;
-            conan profile new default --detect
+            brew install git cmake pkg-config protobuf openssl@1.1 ninja
+            export OPENSSL_ROOT=$(brew --prefix openssl@1.1)
           fi
-          conan config set general.revisions_enabled=1
-          conan remote add --insert 0 legleux https://legleux.jfrog.io/artifactory/api/conan/ripple-conan
-          conan install . -if build --build=missing
-          cmake -B build
-          cmake --build build --parallel $(nproc)
+          cmake -B build && cmake --build build --parallel $(nproc)
