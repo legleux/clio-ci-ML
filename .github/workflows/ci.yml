@@ -21,6 +21,12 @@ jobs:
             name: macOS 11
 
     steps:
+      - name: makefile
+        run: echo crap >> file
+
+      - name: read file
+        run: cat file
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
