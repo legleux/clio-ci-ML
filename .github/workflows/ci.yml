@@ -25,7 +25,7 @@ jobs:
         id: new-cache
         uses: actions/cache@v2
         with:
-          path: thenumber
+          path: thenumberfor-${{ runner.OS }}
           key: ${{ runner.OS }}-cache
 
       - name: Generate Prime Numbers
@@ -33,9 +33,15 @@ jobs:
         run: |
           echo "I am an expensive operation!"
           for i in $(seq 1 10); do echo $i;sleep 1; done
+          OS=${{ matrix.runner }}
+          if [[ $OS =~ "ubuntu" ]]; then
+            echo 20 > thenumberfor-${{ runner.OS }}
+          else
+            echo 11 > thenumberfor-${{ runner.OS }}
+          fi
           echo 42 > thenumber
       - name: Use Prime Numbers
-        run: cat thenumber
+        run: cat thenumberfor-${{ runner.OS }}
 
       # - name: Checkout
       #   uses: actions/checkout@v2
