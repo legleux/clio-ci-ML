@@ -36,9 +36,10 @@ jobs:
       - name: Build boost
         run: |
           wget https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.zip
-          unzip -q boost_1_75_0.zip && cd boost_1_75_0 && ls -lah && ./bootstrap && ./b2 cxxflags="-std=c++14"
+          unzip -q boost_1_75_0.zip
+          cd boost_1_75_0
+          ./bootstrap.sh && ./b2 cxxflags="-std=c++14"
           echo "BOOST_ROOT=$PWD" >> $GITHUB_ENV
-
 
       - name: Get boost
         uses: actions/download-artifact@master
