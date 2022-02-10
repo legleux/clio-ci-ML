@@ -43,29 +43,29 @@ jobs:
           cd boost_1_75_0
           ./bootstrap.sh && ./b2 cxxflags="-std=c++14"
 
-      - name: Build
-        working-directory: clio
-        run: |
-          OS=${{ matrix.runner }}
-          ls -lah
-          export BOOST_ROOT=$GITHUB_WORKSPACE/boost_1_75_0
-          echo "BOOST_ROOT: $BOOST_ROOT"
-          if [[ $OS =~ "ubuntu" ]]; then
-            DEBIAN_FRONTEND=noninteractive apt-get install -y protobuf-compiler libprotobuf-dev bison flex autoconf
-            export CC=$(which gcc-9)
-            export CXX=$(which g++-9)
-          else
-            brew install git cmake pkg-config protobuf openssl@1.1 ninja
-            export OPENSSL_ROOT=$(brew --prefix openssl@1.1)
-          fi
-          cmake -B build && cmake --build build --parallel $(nproc)
+      # - name: Build
+      #   working-directory: clio
+      #   run: |
+      #     OS=${{ matrix.runner }}
+      #     ls -lah
+      #     export BOOST_ROOT=$GITHUB_WORKSPACE/boost_1_75_0
+      #     echo "BOOST_ROOT: $BOOST_ROOT"
+      #     if [[ $OS =~ "ubuntu" ]]; then
+      #       DEBIAN_FRONTEND=noninteractive apt-get install -y protobuf-compiler libprotobuf-dev bison flex autoconf
+      #       export CC=$(which gcc-9)
+      #       export CXX=$(which g++-9)
+      #     else
+      #       brew install git cmake pkg-config protobuf openssl@1.1 ninja
+      #       export OPENSSL_ROOT=$(brew --prefix openssl@1.1)
+      #     fi
+      #     cmake -B build && cmake --build build --parallel $(nproc)
 
-      - name: CPack
-        working-directory: clio/build
-        run: cpack -G DEB
+      # - name: CPack
+      #   working-directory: clio/build
+      #   run: cpack -G DEB
 
-      - name: Save Package
-        uses: actions/upload-artifact@master
-        with:
-          name: package
-          path: ./clio/build/_packages/*.deb
+      # - name: Save Package
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     name: package
+      #     path: ./clio/build/_packages/*.deb
