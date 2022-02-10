@@ -34,8 +34,6 @@ jobs:
           path: thenumber
           key: cached-number
 
-
-
       - name: Use Prime Numbers
         run: cat thenumber
 
