@@ -27,11 +27,13 @@ jobs:
           repository: legleux/clio
           ref: pkging
 
-      - name: Build boost
+      - name: Get boost source
         uses: actions/upload-artifact@master
         with:
           name: boost
           path: boost_1_75_0
+
+      - name: Build boost
         run: |
           wget https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.zip
           unzip boost_1_75_0.zip
@@ -40,11 +42,13 @@ jobs:
           echo "::set-env name=BOOST_ROOT::$PWD"
 
 
-      - name: Build
+      - name: Get boost
         uses: actions/download-artifact@master
         with:
           name: boost
           path: boost_1_75_0
+
+      - name: Build
         run: |
           OS=${{ matrix.runner }}
           echo "BOOST_ROOT: $BOOST_ROOT"
