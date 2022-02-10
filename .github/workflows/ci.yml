@@ -84,7 +84,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: package
-          path: ./clio/build/_packages/*.deb
+          path: ./clio/_packages/*.deb
 
   test:
     runs-on: 'ubuntu-20.04'
