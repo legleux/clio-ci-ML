@@ -37,9 +37,8 @@ jobs:
         run: |
           wget https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.zip
           unzip boost_1_75_0.zip
-
           cd boost_1_75_0 && ./bootstrap && ./b2 cxxflags="-std=c++14"
-          echo "::set-env name=BOOST_ROOT::$PWD"
+          echo "BOOST_ROOT=$PWD" >> $GITHUB_ENV
 
 
       - name: Get boost
@@ -51,8 +50,8 @@ jobs:
       - name: Build
         run: |
           OS=${{ matrix.runner }}
+          export BOOST_ROOT=${{ env.BOOST_ROOT }}
           echo "BOOST_ROOT: $BOOST_ROOT"
-          export BOOST_ROOT=$BOOST_ROOT
           if [[ $OS =~ "ubuntu" ]]; then
             protobuf-compiler libprotobuf-dev bison flex autoconf
             export CC=$(which gcc-9)
