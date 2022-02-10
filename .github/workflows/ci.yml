@@ -58,8 +58,23 @@ jobs:
           else
             brew install git cmake pkg-config protobuf openssl@1.1 ninja
             export OPENSSL_ROOT=$(brew --prefix openssl@1.1)
+            export OPENSSL_ROOT_DIR=$OPENSSL_ROOT
+            export OPENSSL_CRYPTO_LIBRARY=$OPENSSL_ROOT/lib/libcrypto.a
           fi
           cmake -B build && cmake --build build --parallel $(nproc)
+      - uses: actions/upload-artifact@master
+        if: ${{ matrix.runner }} == 'ubuntu'
+        run: echo "we should save tests here"
+        # with:
+        #   name: clio_tests
+        #   path: clio/build/clio_tests
+      # #crazy talk
+      # - name: Cache Build
+      #   uses: actions/cache@v1
+      #   id: build-cache
+      #   with:
+      #     path: clio/build
+      #     key: ${{ runner.OS }}-boost
 
       - name: CPack
         working-directory: clio/build
@@ -70,3 +85,6 @@ jobs:
         with:
           name: package
           path: ./clio/build/_packages/*.deb
+
+  test:
+    runs-on: 'ubuntu-20.04'
