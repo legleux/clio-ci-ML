@@ -21,70 +21,48 @@ jobs:
             name: macOS 11
 
     steps:
-      - name: Cache number
-        id: new-cache
-        uses: actions/cache@v2
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
-          path: thenumberfor-${{ runner.OS }}
-          key: ${{ runner.OS }}-cache
+          repository: legleux/clio
+          ref: pkging
 
-      - name: Generate Prime Numbers
-        if: steps.new-cache.outputs.cache-hit != 'true'
+      - name: Cache Boost
+        uses: actions/cache@v1
+        id: boost-cache
+        with:
+          path: boost_1_75_0
+          key: ${{ runner.OS }}-boost
+
+      - name: Build boost
+        if: steps.boost-cache.outputs.cache-hit != 'true'
         run: |
-          echo "I am an expensive operation!"
-          for i in $(seq 1 10); do echo $i;sleep 1; done
+          wget https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.zip
+          unzip -q boost_1_75_0.zip
+          cd boost_1_75_0
+          ./bootstrap.sh && ./b2 cxxflags="-std=c++14"
+
+      - name: Build
+        run: |
           OS=${{ matrix.runner }}
+          ls -lah
+          export BOOST_ROOT=$PWD/boost_1_75_0
+          echo "BOOST_ROOT: $BOOST_ROOT"
           if [[ $OS =~ "ubuntu" ]]; then
-            echo 20 > thenumberfor-${{ runner.OS }}
+            apt update && apt install -y protobuf-compiler libprotobuf-dev bison flex autoconf
+            export CC=$(which gcc-9)
+            export CXX=$(which g++-9)
           else
-            echo 11 > thenumberfor-${{ runner.OS }}
+            brew install git cmake pkg-config protobuf openssl@1.1 ninja
+            export OPENSSL_ROOT=$(brew --prefix openssl@1.1)
           fi
-          echo 42 > thenumber
-      - name: Use Prime Numbers
-        run: cat thenumberfor-${{ runner.OS }}
+          cmake -B build && cmake --build build --parallel $(nproc)
 
-      # - name: Checkout
-      #   uses: actions/checkout@v2
-      #   with:
-      #     repository: legleux/clio
-      #     ref: pkging
+      - name: CPack
+        run: cd ./build && cpack -G DEB
 
-      # - name: Cache Boost
-      #   uses: actions/cache@v1
-      #   id: boost-cache
-      #   with:
-      #     path: boost_1_75_0
-      #     key: ${{ runner.OS }}-boost
-
-      # - name: Build boost
-      #   if: steps.${{ runner.OS }}-boost.outputs.cache-hit != 'true'
-      #   run: |
-      #     wget https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.zip
-      #     unzip -q boost_1_75_0.zip
-      #     cd boost_1_75_0
-      #     ./bootstrap.sh && ./b2 cxxflags="-std=c++14"
-
-      # - name: Build
-      #   run: |
-      #     OS=${{ matrix.runner }}
-      #     ls -lah
-      #     export BOOST_ROOT=$PWD/boost_1_75_0
-      #     echo "BOOST_ROOT: $BOOST_ROOT"
-      #     if [[ $OS =~ "ubuntu" ]]; then
-      #       apt update && apt install -y protobuf-compiler libprotobuf-dev bison flex autoconf
-      #       export CC=$(which gcc-9)
-      #       export CXX=$(which g++-9)
-      #     else
-      #       brew install git cmake pkg-config protobuf openssl@1.1 ninja
-      #       export OPENSSL_ROOT=$(brew --prefix openssl@1.1)
-      #     fi
-      #     cmake -B build && cmake --build build --parallel $(nproc)
-
-      # - name: CPack
-      #   run: cd ./build && cpack -G DEB
-
-      # - name: Save Package
-      #   uses: actions/upload-artifact@master
-      #   with:
-      #     name: packag
-      #     path: ./build/_packages/*.deb
+      - name: Save Package
+        uses: actions/upload-artifact@master
+        with:
+          name: packag
+          path: ./build/_packages/*.deb
