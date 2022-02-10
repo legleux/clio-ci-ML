@@ -62,12 +62,14 @@ jobs:
             export OPENSSL_CRYPTO_LIBRARY=$OPENSSL_ROOT/lib/libcrypto.a
           fi
           cmake -B build && cmake --build build --parallel $(nproc)
-      - uses: actions/upload-artifact@master
+
+      - name: Save clio_tests
+        uses: actions/upload-artifact@v2
         if: ${{ matrix.runner }} == 'ubuntu'
         with:
           name: clio_tests
           path: clio/build/clio_tests
-      # #crazy talk
+      # #crazy talk, should start from scratch? trust cmake?
       # - name: Cache Build
       #   uses: actions/cache@v1
       #   id: build-cache
@@ -90,10 +92,10 @@ jobs:
     needs: build
     steps:
       - name: Save Package
-        uses: actions/download-artifact@master
+        uses: actions/download-artifact@v2
         with:
           name: clio_tests
-          path: ./
+
       - name: Test Clio
         run: file clio_tests
 
