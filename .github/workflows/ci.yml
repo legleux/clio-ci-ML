@@ -51,7 +51,7 @@ jobs:
           export BOOST_ROOT=$GITHUB_WORKSPACE/boost_1_75_0
           echo "BOOST_ROOT: $BOOST_ROOT"
           if [[ $OS =~ "ubuntu" ]]; then
-            sudo apt-update
+            sudo apt-get update
             DEBIAN_FRONTEND=noninteractive sudo apt-get install -y protobuf-compiler libprotobuf-dev bison flex autoconf
             export CC=$(which gcc-9)
             export CXX=$(which g++-9)
