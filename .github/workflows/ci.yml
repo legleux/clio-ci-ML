@@ -56,7 +56,6 @@ jobs:
         working-directory: clio
         run: |
           OS=${{ matrix.runner }}
-          ls -lah
           export BOOST_ROOT=$GITHUB_WORKSPACE/boost_1_75_0
           echo "BOOST_ROOT: $BOOST_ROOT"
           if [[ $OS =~ "ubuntu" ]]; then
