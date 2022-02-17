@@ -83,26 +83,24 @@ jobs:
     needs: build
     runs-on: ubuntu-20.04
     container:
-      image: legleux/clio_tests3
-      volumes:
-        - ${{ github.workspace }}:/test
-    # steps:
-    # - uses: actions/checkout@v2
-    # - name: Run box version
-    #   uses: docker://foundeo/minibox:latest
-    #   with:
-    #     entrypoint: /opt/box/box
-    #     args: version
-    #   # - name: Get clio_tests
-    #   #   uses: actions/download-artifact@v2
-    #   #   with:
-    #   #     name: clio_tests
-    #   #     path: /test
+      image: legleux/clio_tests4
+      # volumes:
+      #   - ${{ github.workspace }}:/test
 
-    #   - name: Test Clio
-    #     # run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
-    #     run: ps -ef && cqlsh --version && /test/clio_tests
+    steps:
+      - name: Get clio_tests
+        uses: actions/download-artifact@v2
+        with:
+          name: clio_tests
+          path: /test
 
+      - name: Test Clio
+        # run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
+        run: |
+          pg_ctlcluster 12 main start
+          su postgres -c"psql -c\"alter user postgres with password 'postgres'\""
+          su cassandra -c "/opt/cassandra/bin/cassandra -R"
+          /test/clio_tests
   upload:
     runs-on: 'ubuntu-20.04'
     needs: test
