@@ -52,7 +52,6 @@ jobs:
           key: ${{ runner.OS }}-rippled
 
       - name: Build
-        if: steps.rippled-cache.outputs.cache-hit != 'true'
         working-directory: clio
         run: |
           OS=${{ matrix.runner }}
