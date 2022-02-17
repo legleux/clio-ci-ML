@@ -94,8 +94,8 @@ jobs:
           name: clio_tests
           path: /test
 
-      - name: Run clio_tests
-        run: chmod +x /test/clio_tests && /test/clio_tests
+      - name: Test Clio
+        run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
 
   upload:
     runs-on: 'ubuntu-20.04'
