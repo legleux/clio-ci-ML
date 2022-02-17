@@ -17,8 +17,8 @@ jobs:
           - runner: ubuntu-20.04
             name: Ubuntu 20.04
 
-          - runner: macos-11
-            name: macOS 11
+          # - runner: macos-11
+          #   name: macOS 11
 
     steps:
       - name: Checkout
