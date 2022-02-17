@@ -88,11 +88,11 @@ jobs:
       #   - ${{ github.workspace }}:/test
 
     steps:
-      - name: Get clio_tests
-        uses: actions/download-artifact@v2
-        with:
-          name: clio_tests
-          path: /test
+      # - name: Get clio_tests
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: clio_tests
+      #     path: /test
 
       - name: Test Clio
         # run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
