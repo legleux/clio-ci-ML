@@ -89,6 +89,7 @@ jobs:
 
   test:
     needs: build
+    runs-on: ubuntu-20.04
     container:
       image: legleux/clio_tests
       volumes:
