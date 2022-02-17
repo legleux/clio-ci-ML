@@ -88,16 +88,21 @@ jobs:
           path: ./clio/_packages/*.deb
 
   test:
-    runs-on: 'ubuntu-20.04'
     needs: build
+    container:
+      image: legleux/clio_tests
+      volumes:
+        - ${{ github.workspace }}:/test
+
     steps:
-      - name: Save Package
+      - name: Get clio_tests
         uses: actions/download-artifact@v2
         with:
           name: clio_tests
+          path: /test
 
       - name: Test Clio
-        run: file clio_tests
+        run: /test/clio_tests
 
   upload:
     runs-on: 'ubuntu-20.04'
