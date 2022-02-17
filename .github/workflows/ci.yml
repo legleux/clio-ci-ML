@@ -7,15 +7,15 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.runner || 'ubuntu-20.04' }}
+    runs-on: ${{ matrix.runner || 'ubuntu-18.04' }}
     name: ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
         include:
 
-          - runner: ubuntu-20.04
-            name: Ubuntu 20.04
+          - runner: ubuntu-18.04
+            name: Ubuntu 18.04
 
           # - runner: macos-11
           #   name: macOS 11
@@ -81,9 +81,9 @@ jobs:
 
   test:
     needs: build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     container:
-      image: legleux/clio_tests
+      image: legleux/clio_tests2
       volumes:
         - ${{ github.workspace }}:/test
 
@@ -98,7 +98,7 @@ jobs:
         run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
 
   upload:
-    runs-on: 'ubuntu-20.04'
+    runs-on: 'ubuntu-18.04'
     needs: test
     steps:
       - name: Push to Artifactory
