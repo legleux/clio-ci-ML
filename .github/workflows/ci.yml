@@ -43,16 +43,7 @@ jobs:
           cd boost_1_75_0
           ./bootstrap.sh && ./b2 cxxflags="-std=c++14"
 
-
-      - name: Cache rippled
-        uses: actions/cache@v1
-        id: rippled-cache
-        with:
-          path: ./clio/build/
-          key: ${{ runner.OS }}-rippled-build
-
-      - name: Build
-        if: steps.rippled-cache.outputs.cache-hit != 'true'
+      - name: Build clio
         working-directory: clio
         run: |
           OS=${{ matrix.runner }}
@@ -71,22 +62,14 @@ jobs:
           fi
           cmake -B build && cmake --build build --parallel $(nproc)
 
-      - name: Save clio_tests
+      - name: Artifact clio_tests
         uses: actions/upload-artifact@v2
         if: ${{ matrix.runner }} == 'ubuntu'
         with:
           name: clio_tests
           path: clio/build/clio_tests
 
-      # #crazy talk, should start from scratch? trust cmake?
-      # - name: Cache Build
-      #   uses: actions/cache@v1
-      #   id: build-cache
-      #   with:
-      #     path: clio/build
-      #     key: ${{ runner.OS }}-boost
-
-      - name: CPack
+      - name: Create package
         working-directory: clio/build
         run: cpack -G DEB
 
@@ -111,7 +94,7 @@ jobs:
           name: clio_tests
           path: /test
 
-      - name: Test Clio
+      - name: Run clio_tests
         run: chmod +x /test/clio_tests && /test/clio_tests
 
   upload:
