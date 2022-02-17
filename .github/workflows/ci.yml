@@ -46,13 +46,13 @@ jobs:
 
       - name: Cache rippled
         uses: actions/cache@v1
-        id: rippled-cached
+        id: rippled-cache
         with:
           path: ./clio/build/
-          key: ${{ runner.OS }}-rippled
+          key: ${{ runner.OS }}-rippled-build
 
       - name: Build
-        if: steps.rippled-cached.outputs.cache-hit != 'true'
+        if: steps.rippled-cache.outputs.cache-hit != 'true'
         working-directory: clio
         run: |
           OS=${{ matrix.runner }}
