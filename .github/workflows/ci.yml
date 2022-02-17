@@ -83,20 +83,25 @@ jobs:
     needs: build
     runs-on: ubuntu-20.04
     container:
-      image: legleux/clio_tests2
+      image: legleux/clio_tests3
       volumes:
         - ${{ github.workspace }}:/test
+    # steps:
+    # - uses: actions/checkout@v2
+    # - name: Run box version
+    #   uses: docker://foundeo/minibox:latest
+    #   with:
+    #     entrypoint: /opt/box/box
+    #     args: version
+    #   # - name: Get clio_tests
+    #   #   uses: actions/download-artifact@v2
+    #   #   with:
+    #   #     name: clio_tests
+    #   #     path: /test
 
-    steps:
-      # - name: Get clio_tests
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: clio_tests
-      #     path: /test
-
-      - name: Test Clio
-        # run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
-        run: ps -ef && cqlsh --version && /test/clio_tests
+    #   - name: Test Clio
+    #     # run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
+    #     run: ps -ef && cqlsh --version && /test/clio_tests
 
   upload:
     runs-on: 'ubuntu-20.04'
