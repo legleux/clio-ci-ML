@@ -43,41 +43,41 @@ jobs:
           cd boost_1_75_0
           ./bootstrap.sh && ./b2 cxxflags="-std=c++14"
 
-      - name: Build clio
-        working-directory: clio
-        run: |
-          OS=${{ matrix.runner }}
-          export BOOST_ROOT=$GITHUB_WORKSPACE/boost_1_75_0
-          echo "BOOST_ROOT: $BOOST_ROOT"
-          if [[ $OS =~ "ubuntu" ]]; then
-            sudo apt-get update
-            DEBIAN_FRONTEND=noninteractive sudo apt-get install -y protobuf-compiler libprotobuf-dev bison flex autoconf
-            export CC=$(which gcc-9)
-            export CXX=$(which g++-9)
-          else
-            brew install git cmake pkg-config protobuf openssl@1.1 ninja
-            export OPENSSL_ROOT=$(brew --prefix openssl@1.1)
-            export OPENSSL_ROOT_DIR=$OPENSSL_ROOT
-            export OPENSSL_CRYPTO_LIBRARY=$OPENSSL_ROOT/lib/libcrypto.a
-          fi
-          cmake -B build && cmake --build build --parallel $(nproc)
+      # - name: Build clio
+      #   working-directory: clio
+      #   run: |
+      #     OS=${{ matrix.runner }}
+      #     export BOOST_ROOT=$GITHUB_WORKSPACE/boost_1_75_0
+      #     echo "BOOST_ROOT: $BOOST_ROOT"
+      #     if [[ $OS =~ "ubuntu" ]]; then
+      #       sudo apt-get update
+      #       DEBIAN_FRONTEND=noninteractive sudo apt-get install -y protobuf-compiler libprotobuf-dev bison flex autoconf
+      #       export CC=$(which gcc-9)
+      #       export CXX=$(which g++-9)
+      #     else
+      #       brew install git cmake pkg-config protobuf openssl@1.1 ninja
+      #       export OPENSSL_ROOT=$(brew --prefix openssl@1.1)
+      #       export OPENSSL_ROOT_DIR=$OPENSSL_ROOT
+      #       export OPENSSL_CRYPTO_LIBRARY=$OPENSSL_ROOT/lib/libcrypto.a
+      #     fi
+      #     cmake -B build && cmake --build build --parallel $(nproc)
 
-      - name: Artifact clio_tests
-        uses: actions/upload-artifact@v2
-        if: ${{ matrix.runner }} == 'ubuntu'
-        with:
-          name: clio_tests
-          path: clio/build/clio_tests
+      # - name: Artifact clio_tests
+      #   uses: actions/upload-artifact@v2
+      #   if: ${{ matrix.runner }} == 'ubuntu'
+      #   with:
+      #     name: clio_tests
+      #     path: clio/build/clio_tests
 
-      - name: Create package
-        working-directory: clio/build
-        run: cpack -G DEB
+      # - name: Create package
+      #   working-directory: clio/build
+      #   run: cpack -G DEB
 
-      - name: Save Package
-        uses: actions/upload-artifact@master
-        with:
-          name: package
-          path: ./clio/_packages/*.deb
+      # - name: Save Package
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     name: package
+      #     path: ./clio/_packages/*.deb
 
   test:
     needs: build
@@ -88,14 +88,15 @@ jobs:
         - ${{ github.workspace }}:/test
 
     steps:
-      - name: Get clio_tests
-        uses: actions/download-artifact@v2
-        with:
-          name: clio_tests
-          path: /test
+      # - name: Get clio_tests
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: clio_tests
+      #     path: /test
 
       - name: Test Clio
-        run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
+        # run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
+        run: ps -ef && cqlsh --version && cqlsh
 
   upload:
     runs-on: 'ubuntu-20.04'
