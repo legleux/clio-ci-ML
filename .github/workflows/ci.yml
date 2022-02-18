@@ -95,6 +95,7 @@ jobs:
       - name: Test Clio
         # run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
         run: |
+          sudo sysctl -w vm.max_map_count=1048575
           pg_ctlcluster 12 main start
           su postgres -c"psql -c\"alter user postgres with password 'postgres'\""
           su cassandra -c "/opt/cassandra/bin/cassandra -R"
