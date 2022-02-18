@@ -109,7 +109,7 @@ jobs:
           pg_ctlcluster 12 main start
           su postgres -c"psql -c\"alter user postgres with password 'postgres'\""
           /opt/cassandra/bin/cassandra -R && sleep 20
-          /clio_tests
+          chmod +x /clio_tests && /clio_tests
   upload:
     runs-on: 'ubuntu-20.04'
     needs: test
