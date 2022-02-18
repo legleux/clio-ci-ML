@@ -79,15 +79,15 @@ jobs:
           name: clio_tests
           path: clio/build/clio_tests
 
-      - name: Create package
-        working-directory: clio/build
-        run: cpack -G DEB
+      # - name: Create package
+      #   working-directory: clio/build
+      #   run: cpack -G DEB
 
-      - name: Save Package
-        uses: actions/upload-artifact@master
-        with:
-          name: package
-          path: ./clio/_packages/*.deb
+      # - name: Save Package
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     name: package
+      #     path: ./clio/_packages/*.deb
 
   test:
     needs: build
