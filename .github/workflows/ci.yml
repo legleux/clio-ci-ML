@@ -98,7 +98,7 @@ jobs:
           sudo sysctl -w vm.max_map_count=1048575
           pg_ctlcluster 12 main start
           su postgres -c"psql -c\"alter user postgres with password 'postgres'\""
-          su cassandra -c "/opt/cassandra/bin/cassandra -R"
+          sudo su cassandra -c "/opt/cassandra/bin/cassandra -R"
           /clio_tests
   upload:
     runs-on: 'ubuntu-20.04'
