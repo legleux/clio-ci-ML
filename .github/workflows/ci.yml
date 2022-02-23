@@ -17,8 +17,8 @@ jobs:
           - runner: ubuntu-20.04
             name: Ubuntu 20.04
 
-          # - runner: macos-11
-          #   name: macOS 11
+          - runner: ubuntu-18.04
+            name: Ubuntu 18.04
 
     steps:
       - name: Checkout
@@ -43,17 +43,7 @@ jobs:
           cd boost_1_75_0
           ./bootstrap.sh && ./b2 cxxflags="-std=c++14"
 
-      - name: Cache rippled
-        uses: actions/cache@v2
-        id: rippled-cache
-        with:
-          path: |
-            clio/build/clio_tests
-            clio/build/clio_server
-          key: ${{ runner.OS }}-rippled
-
       - name: Build clio
-        if: steps.rippled-cache.outputs.cache-hit != 'true'
         working-directory: clio
         run: |
           OS=${{ matrix.runner }}
@@ -79,15 +69,15 @@ jobs:
           name: clio_tests
           path: clio/build/clio_tests
 
-      # - name: Create package
-      #   working-directory: clio/build
-      #   run: cpack -G DEB
+      - name: Create package
+        working-directory: clio/build
+        run: cpack -G DEB
 
-      # - name: Save Package
-      #   uses: actions/upload-artifact@master
-      #   with:
-      #     name: package
-      #     path: ./clio/_packages/*.deb
+      - name: Save Package
+        uses: actions/upload-artifact@master
+        with:
+          name: package
+          path: ./clio/_packages/*.deb
 
   test:
     needs: build
@@ -105,10 +95,9 @@ jobs:
       - name: Test Clio
         # run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
         run: |
-          sysctl -w vm.max_map_count=1048575
           pg_ctlcluster 12 main start
           su postgres -c"psql -c\"alter user postgres with password 'postgres'\""
-          /opt/cassandra/bin/cassandra -R && sleep 20
+          su cassandra -c "/opt/cassandra/bin/cassandra -R" && sleep 5
           chmod +x /clio_tests && /clio_tests
   upload:
     runs-on: 'ubuntu-20.04'
