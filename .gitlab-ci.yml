@@ -11,7 +11,8 @@ build-clio:
   artifacts:
     paths:
       - clio_src/build/
-
+  tags:
+    - 4xlarge
 
 test-clio:
   stage: test
