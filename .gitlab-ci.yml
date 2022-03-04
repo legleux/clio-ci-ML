@@ -17,7 +17,7 @@ test-clio:
   stage: test
   image: legleux/clio_tests
   dependencies:
-    - build
+    - build-clio
   script:
     - ls -l
     - ./test_clio.sh
