@@ -1,3 +1,9 @@
+stages:
+ - build
+ - test
+ - package
+#  - deploy
+
 build-clio:
   stage: build
   script:
