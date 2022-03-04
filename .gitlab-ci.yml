@@ -1,21 +1,24 @@
 stages:
  - build
- - test
- - package
+#  - test
+#  - package
 #  - deploy
 
 build-clio:
   stage: build
+  image: legleux/clio_builder
   script:
-    - ./build_clio.sh
-
-test-clio:
-  stage: test
-  script:
-    - ./test_clio.sh
+  - |
+    ls -lh
 
 
-package-clio:
-  stage: package
-  script:
-    - ./package_clio.sh
+# test-clio:
+#   stage: test
+#   script:
+#     - ./test_clio.sh
+
+
+# package-clio:
+#   stage: package
+#   script:
+#     - ./package_clio.sh
