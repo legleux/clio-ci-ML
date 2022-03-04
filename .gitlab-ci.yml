@@ -7,15 +7,17 @@ stages:
 build-clio:
   stage: build
   image: legleux/clio_builder
-  script:
-  - |
-    ls -lh
+  script: build_clio.sh
+  artifacts:
+    paths:
+      - clio_src/build/
 
 
-# test-clio:
-#   stage: test
-#   script:
-#     - ./test_clio.sh
+test-clio:
+  stage: test
+  image: legleux/clio_tests
+  script: test_clio.sh
+
 
 
 # package-clio:
