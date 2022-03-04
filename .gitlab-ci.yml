@@ -1,15 +1,15 @@
 build-clio:
   stage: build
   script:
-    - echo "Hello, $GITLAB_USER_LOGIN!"
+    - ./build_clio.sh
 
 test-clio:
   stage: test
   script:
-    - echo "This job tests something"
+    - ./test_clio.sh
 
 
-push-art:
-  stage: deploy
+package-clio:
+  stage: package
   script:
-    - echo "This job deploys something from the $CI_COMMIT_BRANCH branch."
+    - ./package_clio.sh
