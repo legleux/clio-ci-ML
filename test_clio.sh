@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
 ls -lh
-cd build && ./clio_tests
+ls ./clio_src
+cd ./clio_src/build && ./clio_tests
