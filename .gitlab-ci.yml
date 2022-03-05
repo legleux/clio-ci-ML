@@ -39,5 +39,7 @@ package-clio:
   artifacts:
     paths:
       - clio_src/build/Packages
+      - clio_src/build/_CPack_Packages/Linux/DEB/PreinstallOutput.log
+
   script:
     - ./package_clio.sh
