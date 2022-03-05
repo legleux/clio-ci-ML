@@ -14,9 +14,8 @@ build-clio:
       - clio_src/build/cmake_install.cmake
       - clio_src/build/clio.service
       - clio_src/build/debian
-      - clio_src/build/postinst
+      - clio_src/build/debian/postinst
       - clio_src/build/install-config.json
-      - clio_src/build/install_manifest.txt
       - clio_src/build/clio_server
       - clio_src/build/clio_tests
       - clio_src/build/CPackConfig.cmake
@@ -34,6 +33,8 @@ test-clio:
 package-clio:
   stage: package
   image: legleux/clio_builder
+  dependencies:
+    - build-clio
   artifacts:
     paths:
       - clio_src/build/Packages
