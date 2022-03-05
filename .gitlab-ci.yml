@@ -10,15 +10,16 @@ build-clio:
   script: ./build_clio.sh
   artifacts:
     paths:
-      - clio_src/build/CPackSourceConfig.cmake
-      - clio_src/build/cmake_install.cmake
-      - clio_src/build/clio.service
-      - clio_src/build/debian
-      - clio_src/build/debian/postinst
-      - clio_src/build/install-config.json
-      - clio_src/build/clio_server
-      - clio_src/build/clio_tests
-      - clio_src/build/CPackConfig.cmake
+      - clio_src/build/
+      # - clio_src/build/CPackSourceConfig.cmake
+      # - clio_src/build/cmake_install.cmake
+      # - clio_src/build/clio.service
+      # - clio_src/build/debian
+      # - clio_src/build/debian/postinst
+      # - clio_src/build/install-config.json
+      # - clio_src/build/clio_server
+      # - clio_src/build/clio_tests
+      # - clio_src/build/CPackConfig.cmake
   tags:
     - 4xlarge
 

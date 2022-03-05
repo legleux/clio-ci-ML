@@ -1,3 +1,14 @@
 #!/usr/bin/env bash
 
-cd ./clio_src/build && cpack -G DEB
+
+echo "PWD: $PWD"
+ls -lh
+
+echo "clio_src:"
+ls ./clio_src
+
+cd ./clio_src/build
+echo "clio_src/build:"
+ls -lh
+
+cpack -G DEB
