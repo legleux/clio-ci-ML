@@ -11,5 +11,5 @@ cd ./clio_src/build
 echo "clio_src/build:"
 ls -lh
 
-cpack -G DEB || true
+cpack -G DEB
 cat _CPack_Packages/Linux/DEB/PreinstallOutput.log

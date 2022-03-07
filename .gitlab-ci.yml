@@ -2,7 +2,7 @@ stages:
  - build
  - test
  - package
-#  - deploy
+ - deploy
 
 build-clio:
   stage: build
@@ -35,6 +35,8 @@ test-clio:
 package-clio:
   stage: package
   image: legleux/clio_builder
+  allow_failure: true
+  needs: ["test-clio"]
   dependencies:
     - build-clio
   artifacts:
@@ -44,3 +46,9 @@ package-clio:
 
   script:
     - ./package_clio.sh
+
+upload-package:
+  stage: deploy
+  dependencies:
+    - build-clio
+    - test-clio
