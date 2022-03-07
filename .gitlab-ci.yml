@@ -36,7 +36,7 @@ package-clio:
   stage: package
   image: legleux/clio_builder
   allow_failure: true
-  needs: ["test-clio"]
+  needs: ["build-clio", "test-clio"]
   dependencies:
     - build-clio
   artifacts:
@@ -52,3 +52,4 @@ upload-package:
   dependencies:
     - build-clio
     - test-clio
+  script: ["upload_to_art.sh clio_src/build/Packages/*.deb"]
