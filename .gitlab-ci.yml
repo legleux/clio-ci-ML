@@ -52,4 +52,4 @@ upload-package:
   dependencies:
     - build-clio
     - test-clio
-  script: ["upload_to_art.sh clio_src/build/Packages/*.deb"]
+  script: ["./upload_to_art.sh clio_src/build/Packages/*.deb"]
