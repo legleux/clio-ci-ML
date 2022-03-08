@@ -8,9 +8,10 @@ up_dpkg(){
   PKG="$(basename $1)"
   # ARTIFACTORY_URL=$RIPPLE_URL
   ARTIFACTORY_URL=$TEST_URL
+  LTEST_REPO="clio-debian"
   TEST_REPO="clio-deb-test-mirror"
   REAL_REPO="clio-deb"
-  REPO=$TEST_REPO
+  REPO=$LTEST_REPO
   COMPONENT="beta"
   ARCHITECTURE="amd64"
   DISTROS="focal" # hirsute impish jammy"
