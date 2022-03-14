@@ -6,16 +6,17 @@ TEST_CREDS="-ulegleux@gmail.com:${LEGLEUX_ART_PW}"
 up_dpkg(){
   TARGET_FILE_PATH=$(realpath $1)
   PKG="$(basename $1)"
-  # ARTIFACTORY_URL=$RIPPLE_URL
-  ARTIFACTORY_URL=$TEST_URL
+  ARTIFACTORY_URL=$RIPPLE_URL
+  # ARTIFACTORY_URL=$TEST_URL
   LTEST_REPO="clio-debian"
   TEST_REPO="clio-deb-test-mirror"
   REAL_REPO="clio-deb"
-  REPO=$LTEST_REPO
+  REPO=$TEST_REPO
   COMPONENT="beta"
   ARCHITECTURE="amd64"
   DISTROS="focal" # hirsute impish jammy"
-  CREDS=$TEST_CREDS
+  # CREDS=$TEST_CREDS
+  CREDS=$RIPPLE_CREDS
   for dist in $DISTROS ; do
       if [ -z "$DISTROS_MATRIX" ]; then DISTROS_MATRIX=";";fi
       DISTROS_MATRIX="${DISTROS_MATRIX}deb.distribution=${dist};"
