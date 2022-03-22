@@ -32,21 +32,6 @@ test-clio:
   script:
     - ./test_clio.sh
 
-package-clio:
-  stage: package
-  image: legleux/clio_builder
-  allow_failure: true
-  needs: ["build-clio", "test-clio"]
-  dependencies:
-    - build-clio
-  artifacts:
-    paths:
-      - clio_src/build/Packages
-      - clio_src/build/_CPack_Packages/Linux/DEB/PreinstallOutput.log
-
-  script:
-    - ./package_clio.sh
-
 upload-package:
   stage: deploy
   dependencies:
