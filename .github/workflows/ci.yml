@@ -64,36 +64,36 @@ jobs:
           cd boost_1_75_0
           ./bootstrap.sh && ./b2 cxxflags="-std=c++14"
 
-      - name: Build clio
-        id: build
-        working-directory: clio_src
-        env:
-          BRANCH: ${{ github.event.client_payload.branch }}
-          REF: ${{ github.event.client_payload.SHA }}
-        run: |
-          OS=${{ matrix.runner }}
-          export BOOST_ROOT=$GITHUB_WORKSPACE/boost_1_75_0
-          echo "BOOST_ROOT: $BOOST_ROOT"
-          echo "BRANCH@REF: $BRANCH $REF"
-          if [[ $OS =~ "ubuntu" ]]; then
-            sudo apt-get update
-            DEBIAN_FRONTEND=noninteractive sudo apt-get install -y protobuf-compiler libprotobuf-dev bison flex autoconf
-            export CC=$(which gcc-9)
-            export CXX=$(which g++-9)
-          else
-            brew install git cmake pkg-config protobuf openssl@1.1 ninja
-            export OPENSSL_ROOT=$(brew --prefix openssl@1.1)
-            export OPENSSL_ROOT_DIR=$OPENSSL_ROOT
-            export OPENSSL_CRYPTO_LIBRARY=$OPENSSL_ROOT/lib/libcrypto.a
-          fi
-          cmake -B build && cmake --build build --parallel $(nproc)
+      # - name: Build clio
+      #   id: build
+      #   working-directory: clio_src
+      #   env:
+      #     BRANCH: ${{ github.event.client_payload.branch }}
+      #     REF: ${{ github.event.client_payload.SHA }}
+      #   run: |
+      #     OS=${{ matrix.runner }}
+      #     export BOOST_ROOT=$GITHUB_WORKSPACE/boost_1_75_0
+      #     echo "BOOST_ROOT: $BOOST_ROOT"
+      #     echo "BRANCH@REF: $BRANCH $REF"
+      #     if [[ $OS =~ "ubuntu" ]]; then
+      #       sudo apt-get update
+      #       DEBIAN_FRONTEND=noninteractive sudo apt-get install -y protobuf-compiler libprotobuf-dev bison flex autoconf
+      #       export CC=$(which gcc-9)
+      #       export CXX=$(which g++-9)
+      #     else
+      #       brew install git cmake pkg-config protobuf openssl@1.1 ninja
+      #       export OPENSSL_ROOT=$(brew --prefix openssl@1.1)
+      #       export OPENSSL_ROOT_DIR=$OPENSSL_ROOT
+      #       export OPENSSL_CRYPTO_LIBRARY=$OPENSSL_ROOT/lib/libcrypto.a
+      #     fi
+      #     cmake -B build && cmake --build build --parallel $(nproc)
 
-      - name: Artifact clio_tests
-        uses: actions/upload-artifact@v2
-        if: ${{ matrix.runner }} == 'ubuntu'
-        with:
-          name: clio_tests
-          path: clio/build/clio_tests
+      # - name: Artifact clio_tests
+      #   uses: actions/upload-artifact@v2
+      #   if: ${{ matrix.runner }} == 'ubuntu'
+      #   with:
+      #     name: clio_tests
+      #     path: clio/build/clio_tests
 
       # - name: Create package
       #   working-directory: clio/build
