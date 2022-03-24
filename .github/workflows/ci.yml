@@ -6,9 +6,26 @@ on:
   push:
 
 jobs:
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: legleux/clio
+      - name: Lint
+        run: |
+          echo "clang-format check goes here"
+
+
   build:
     runs-on: ${{ matrix.runner || 'ubuntu-20.04' }}
     name: ${{ matrix.name }}
+    needs: lint
+    outputs:
+      output2: ${{ steps.build.outputs.test }}
     strategy:
       fail-fast: false
       matrix:
@@ -22,11 +39,15 @@ jobs:
 
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v2
         with:
           repository: legleux/clio
-          ref: pkging
-          path: clio
+          ref: ${{ github.event.client_payload.branch }}
+          path: clio_src
+
+      - name: See what's in here
+        run: ls -lh
 
       - name: Cache Boost
         uses: actions/cache@v1
@@ -44,11 +65,16 @@ jobs:
           ./bootstrap.sh && ./b2 cxxflags="-std=c++14"
 
       - name: Build clio
-        working-directory: clio
+        id: build
+        working-directory: clio_src
+        env:
+          BRANCH: ${{ github.event.client_payload.branch }}
+          REF: ${{ github.event.client_payload.SHA }}
         run: |
           OS=${{ matrix.runner }}
           export BOOST_ROOT=$GITHUB_WORKSPACE/boost_1_75_0
           echo "BOOST_ROOT: $BOOST_ROOT"
+          echo "BRANCH@REF: $BRANCH $REF"
           if [[ $OS =~ "ubuntu" ]]; then
             sudo apt-get update
             DEBIAN_FRONTEND=noninteractive sudo apt-get install -y protobuf-compiler libprotobuf-dev bison flex autoconf
@@ -69,39 +95,39 @@ jobs:
           name: clio_tests
           path: clio/build/clio_tests
 
-      - name: Create package
-        working-directory: clio/build
-        run: cpack -G DEB
+      # - name: Create package
+      #   working-directory: clio/build
+      #   run: cpack -G DEB
 
-      - name: Save Package
-        uses: actions/upload-artifact@master
-        with:
-          name: package
-          path: ./clio/_packages/*.deb
+      # - name: Save Package
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     name: package
+      #     path: ./clio/_packages/*.deb
 
-  test:
-    needs: build
-    runs-on: ubuntu-20.04
-    container:
-      image: legleux/clio_tests
+  # test:
+  #   needs: build
+  #   runs-on: ubuntu-20.04
+  #   container:
+  #     image: legleux/clio_tests
 
-    steps:
-      - name: Get clio_tests
-        uses: actions/download-artifact@v2
-        with:
-          name: clio_tests
-          path: /
+  #   steps:
+  #     - name: Get clio_tests
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: clio_tests
+  #         path: /
 
-      - name: Test Clio
-        # run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
-        run: |
-          pg_ctlcluster 12 main start
-          su postgres -c"psql -c\"alter user postgres with password 'postgres'\""
-          su cassandra -c "/opt/cassandra/bin/cassandra -R" && sleep 5
-          chmod +x /clio_tests && /clio_tests
-  upload:
-    runs-on: 'ubuntu-20.04'
-    needs: test
-    steps:
-      - name: Push to Artifactory
-        run: echo "am pushing"
+  #     - name: Test Clio
+  #       # run: chmod +x /test/clio_tests && ls -lah && ls -lh /test && /test/clio_tests
+  #       run: |
+  #         pg_ctlcluster 12 main start
+  #         su postgres -c"psql -c\"alter user postgres with password 'postgres'\""
+  #         su cassandra -c "/opt/cassandra/bin/cassandra -R" && sleep 5
+  #         chmod +x /clio_tests && /clio_tests
+  # upload:
+  #   runs-on: 'ubuntu-20.04'
+  #   needs: test
+  #   steps:
+  #     - name: Push to Artifactory
+  #       run: echo "am pushing"
