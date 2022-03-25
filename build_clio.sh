@@ -4,8 +4,9 @@ set -e
 
 git clone https://github.com/legleux/clio.git clio_src
 pushd clio_src
-git checkout pkg-in-other-repo
+git checkout master
 cp -r ../CMake/packaging CMake/
+ls -lh CMake
 cmake -B build -DPACKAGE=1
 cmake --build build --parallel $(nproc)
 cd build && cpack -G DEB
