@@ -38,7 +38,7 @@ jobs:
             name: Ubuntu 18.04
 
     steps:
-      - name: Checkout
+      - name: Checkout Clio
         id: checkout
         uses: actions/checkout@v2
         with:
@@ -46,8 +46,20 @@ jobs:
           ref: ${{ github.event.client_payload.branch }}
           path: clio_src
 
+      - name: Checkout Packaging
+        id: checkout
+        uses: actions/checkout@v2
+        with:
+          repository: legleux/clio-ci
+          ref: ${{ github.event.client_payload.branch }}
+          path: clio_build
+
       - name: See what's in here
         run: ls -lh
+
+      - name: Overlay Packaging
+        run: |
+          cp -r clio_build/CMake/packaging clio_src/CMake/
 
       - name: Cache Boost
         uses: actions/cache@v1
@@ -95,15 +107,15 @@ jobs:
       #     name: clio_tests
       #     path: clio/build/clio_tests
 
-      # - name: Create package
-      #   working-directory: clio/build
-      #   run: cpack -G DEB
+      - name: Create package
+        working-directory: clio_src/build
+        run: cpack -G DEB
 
-      # - name: Save Package
-      #   uses: actions/upload-artifact@master
-      #   with:
-      #     name: package
-      #     path: ./clio/_packages/*.deb
+      - name: Save Package
+        uses: actions/upload-artifact@master
+        with:
+          name: package
+          path: ./clio_src/Packages/*.deb
 
   # test:
   #   needs: build

@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+export DH_VERBOSE = 1
+export DH_OPTIONS = -v
+# debuild sets some warnings that don't work well
+# for our curent build..so try to remove those flags here:
+export CFLAGS:=$(subst -Wformat,,$(CFLAGS))
+export CFLAGS:=$(subst -Werror=format-security,,$(CFLAGS))
+export CXXFLAGS:=$(subst -Wformat,,$(CXXFLAGS))
+export CXXFLAGS:=$(subst -Werror=format-security,,$(CXXFLAGS))
+
+%:
+	dh $@ --with systemd
+
+override_dh_systemd_start:
+	dh_systemd_start --no-restart-on-upgrade
