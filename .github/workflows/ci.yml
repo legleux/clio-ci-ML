@@ -51,7 +51,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: legleux/clio-ci
-          ref: ${{ github.event.client_payload.branch }}
           path: clio_build
 
       - name: See what's in here
@@ -98,7 +97,7 @@ jobs:
             export OPENSSL_ROOT_DIR=$OPENSSL_ROOT
             export OPENSSL_CRYPTO_LIBRARY=$OPENSSL_ROOT/lib/libcrypto.a
           fi
-          cmake -B build && cmake --build build --parallel $(nproc)
+          cmake -B build -DPACKAGE=1 && cmake --build build --parallel $(nproc)
 
       # - name: Artifact clio_tests
       #   uses: actions/upload-artifact@v2
