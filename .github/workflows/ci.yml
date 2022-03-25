@@ -114,7 +114,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: package
-          path: ./clio_src/Packages/*.deb
+          path: ./clio_src/build/Packages/*.deb
 
   # test:
   #   needs: build
