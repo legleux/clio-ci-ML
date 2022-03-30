@@ -16,9 +16,8 @@ jobs:
           repository: legleux/clio
       - name: Lint
         run: |
-          sudo apt-get install clang-format-11
           find src unittests -type f \( -name '*.cpp' -o -name '*.h' -o -name '*.ipp' \) -print0 | xargs -0 clang-format-11 -i
-          git diff --color
+          git diff --color --exit-code
 
 
   build:
