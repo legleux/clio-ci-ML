@@ -14,12 +14,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: legleux/clio
+          ref: ${{ github.event.client_payload.branch }}
+
       - name: Lint
         run: |
           find src unittests -type f \( -name '*.cpp' -o -name '*.h' -o -name '*.ipp' \) -print0 | xargs -0 clang-format-11 -i
           git diff --color --exit-code
-          echo $?
-
 
   build:
     runs-on: ${{ matrix.runner || 'ubuntu-20.04' }}
