@@ -1,0 +1,24 @@
+#!/bin/sh
+set -e
+
+USER_NAME=clio
+GROUP_NAME=clio
+case "$1" in
+    configure)
+        # [ ] TODO: if cpack_package_insatll desont' exist, create it
+        # if ti's the default /opt/clio, this isn't needed.
+        # mkdir /opt/clio
+        chown -R $USER_NAME:$GROUP_NAME @CPACK_PACKAGE_INSTALL_DIRECTORY@
+        ln -sf @CPACK_PACKAGE_INSTALL_DIRECTORY@/bin/@CLIO_PROJECT_NAME@ /usr/local/bin/cool_bro
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+exit 0
