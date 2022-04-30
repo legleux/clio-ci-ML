@@ -33,8 +33,8 @@ ExternalProject_Add(${CLIO_PROJECT_NAME}
 
     CMAKE_ARGS -DPACKAGING=1
     BUILD_COMMAND cmake --build . --parallel $(nproc)
-    INSTALL_COMMAND cmake --install . --prefix ${CMAKE_CURRENT_SOURCE_DIR}/CLIO_PACKAGE
-    # INSTALL_COMMAND ""
+    # INSTALL_COMMAND cmake --install . --prefix ${CMAKE_CURRENT_SOURCE_DIR}/CLIO_PACKAGE
+    INSTALL_COMMAND ""
 )
 
 ExternalProject_Get_property(${CLIO_PROJECT_NAME} SOURCE_DIR)
