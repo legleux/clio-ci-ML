@@ -20,9 +20,9 @@ ExternalProject_Add(${CLIO_PROJECT_NAME}
     # BINARY_DIR ${CLIO_BIN_DIR}
     # LOG_DOWNLOAD 1
     # DOWNLOAD_COMMAND cp -r  /home/mlegleux/dev/SMALL_PKG_TEST/${CLIO_PROJECT_NAME} .
-    DOWNLOAD_COMMAND cp -r /home/mlegleux/dev/clio .
-    # GIT_REPOSITORY ${CLIO_REPO}
-    # GIT_TAG new-build-repo
+    # DOWNLOAD_COMMAND cp -r /source/clio .
+    GIT_REPOSITORY ${CLIO_REPO}
+    GIT_TAG new-external-repo-build
     # SOURCE_DIR clio
     # CONFIGURE_COMMAND
     # TODO: make the patch command use a script in case it gets more complicated
@@ -32,7 +32,7 @@ ExternalProject_Add(${CLIO_PROJECT_NAME}
         # COMMAND ${CMAKE_COMMAND} -DPIN=${CMAKE_CURRENT_SOURCE_DIR}/CMake/postinst.in -P ${CMAKE_CURRENT_SOURCE_DIR}/CMake/WTF.cmake
 
     CMAKE_ARGS -DPACKAGING=1
-    BUILD_COMMAND cmake --build .
+    BUILD_COMMAND cmake --build . --parallel $(nproc)
     INSTALL_COMMAND cmake --install . --prefix ${CMAKE_CURRENT_SOURCE_DIR}/CLIO_PACKAGE
     # INSTALL_COMMAND ""
 )
@@ -53,3 +53,4 @@ add_custom_command ( OUTPUT CLIO_PACKAGE
 
 
 add_custom_target(package ALL DEPENDS CLIO_PACKAGE)
+add_dependencies(package clio)
