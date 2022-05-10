@@ -15,14 +15,14 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY /opt/clio) # NOTE: could this be overridden 
 # CPACK_PACKAGE_INSTALL_DIRECTORY between them...
 configure_file("CMake/postinst.in" "${CMAKE_SOURCE_DIR}/CMake/postinst")
 
-set(CLIO_REPO https://github.com/legleux/clio)
+# set(CLIO_REPO https://github.com/legleux/clio)
 ExternalProject_Add(${CLIO_PROJECT_NAME}
     # BINARY_DIR ${CLIO_BIN_DIR}
     # LOG_DOWNLOAD 1
     # DOWNLOAD_COMMAND cp -r  /home/mlegleux/dev/SMALL_PKG_TEST/${CLIO_PROJECT_NAME} .
-    # DOWNLOAD_COMMAND cp -r /source/clio .
-    GIT_REPOSITORY ${CLIO_REPO}
-    GIT_TAG new-external-repo-build
+    DOWNLOAD_COMMAND cp -r /clio_src .
+    # GIT_REPOSITORY ${CLIO_REPO}
+    # GIT_TAG new-external-repo-build
     # SOURCE_DIR clio
     # CONFIGURE_COMMAND
     # TODO: make the patch command use a script in case it gets more complicated
