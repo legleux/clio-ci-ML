@@ -10,6 +10,7 @@ set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 set(CPACK_SET_DESTDIR true) # defaults to /usr otherwise
 set(CPACK_INSTALL_PREFIX /opt/clio) # teh only one that seems to work
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "http://github.com/XRPLF/clio")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Ripple Labs Inc. <support@ripple.com>")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Clio XRPL API server")
 set(CPACK_PACKAGE_VENDOR "XRPLF")
 # set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md")
