@@ -5,11 +5,15 @@ USER_NAME=clio
 GROUP_NAME=clio
 case "$1" in
     configure)
-        # [ ] TODO: if cpack_package_insatll doesn't exist, create it
-        # if it's the default /opt/clio, this isn't needed.
-        # mkdir /opt/clio
+        id -u $USER_NAME >/dev/null 2>&1 || \
+        adduser --system --quiet \
+            --home /nonexistent --no-create-home \
+            --disabled-password \
+            --group "$GROUP_NAME"
         chown -R $USER_NAME:$GROUP_NAME @CPACK_PACKAGE_INSTALL_DIRECTORY@
-        ln -sf @CPACK_PACKAGE_INSTALL_DIRECTORY@/bin/@CLIO_PROJECT_NAME@ /usr/local/bin/cool_bro
+        mkdir -p /var/log/clio
+        chown -R $USER_NAME:$GROUP_NAME /var/log/clio/
+        chmod 755 /var/log/clio/
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
