@@ -1,9 +1,18 @@
 cmake_minimum_required(VERSION 3.16)
 project(clio_builder)
+# TODO: fail fatal if no SRC_DIR defined
+
+
 
 include(ExternalProject)
+
 set(CLIO_PROJECT_NAME clio) # NOTE: this should be passed as CMake var from the src repo?
 set(CPACK_PACKAGE_INSTALL_DIRECTORY /opt/clio) # NOTE: could this be overridden somewhere?
+if(NOT DEFINED SRC_DIR)
+    message(FATAL "Must provide Clio source as -DSRC_DIR=<Clio source dir>")
+elseif(DEFINED ENV{CLIO_DIR})
+    set(SRC_DIR ${CLIO_DIR})
+endif()
 # TODO: packaging.cmake must be configure_file()'d to have the same
 # CPACK_PACKAGE_INSTALL_DIRECTORY between them...
 configure_file("CMake/postinst.in" "${CMAKE_SOURCE_DIR}/CMake/postinst")
@@ -12,7 +21,9 @@ ExternalProject_Add(${CLIO_PROJECT_NAME}
     SOURCE_DIR ${SRC_DIR}
     # TODO: make the patch command use a script in case it gets more complicated
     PATCH_COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/CMake .
-    CMAKE_ARGS -DPACKAGING=1
+    CMAKE_ARGS 
+        -DPACKAGING=1
+        -DCMAKE_BUILD_TYPE=Release
     BUILD_COMMAND cmake --build . --parallel $(nproc)
     INSTALL_COMMAND ""
 )
@@ -25,7 +36,7 @@ message("BINARY_DIR: ${BINARY_DIR}")
 message("**********************************")
 
 add_custom_command ( OUTPUT CLIO_PACKAGE
-    COMMAND cpack --config ${BINARY_DIR}/CPackConfig.cmake
+    COMMAND cpack --debug --verbose --config ${BINARY_DIR}/CPackConfig.cmake
 )
 
 add_custom_target(package ALL DEPENDS CLIO_PACKAGE)
